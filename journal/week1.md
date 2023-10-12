@@ -1,1 +1,81 @@
 # Terraform Beginner Bootcamp 2023 - Week 1
+
+## Root Module Structure
+
+Our root module structure is as follows:
+
+```
+PROJECT_ROOT
+│
+├── main.tf                 # everything else.
+├── variables.tf            # stores the structure of input variables
+├── terraform.tfvars        # the data of variables we want to load into our terraform project
+├── providers.tf            # defined required providers and their configuration
+├── outputs.tf              # stores our outputs
+└── README.md               # required for root modules
+```
+
+[Standard Module Structure](https://developer.hashicorp.com/terraform/language/modules/develop/structure)
+
+## Terraform and Input Variables
+
+### Terraform Cloud Variables
+
+In terraform we can set two kind of variables:
+- Enviroment Variables - those you would set in your bash terminal eg. AWS credentials
+- Terraform Variables - those that you would normally set in your tfvars file
+
+We can set Terraform Cloud variables to be sensitive so they are not shown visibliy in the UI.
+
+### Loading Terraform Input Variables
+
+[Terraform Input Variables](https://developer.hashicorp.com/terraform/language/values/variables)
+
+### var flag
+We can use the `-var` flag to set an input variable or override a variable in the tfvars file eg. `terraform -var user_ud="my-user_id"`
+
+### var-file flag
+
+The `-var-file` flag is used to pass Input Variable values into Terraform `plan` and `apply` commands using a file that contains the values. This allows you to save the Input Variable values in a file with a `.tfvars` extension that can be checked into source control for you variable environments you need to deploy to / manage.
+
+The `.tfvars` file contents will contain the definition for the Input Variable values to pass into the Terraform commands. These are defined in a similar way to how local Variables are defined in Terraform code.
+
+Once you have one or more `.tfvars` files created, you can then use the `-var-file` flag to pass in the name of the file for Terraform to pull in for passing Input Variables to the Terraform command. Multiple `-var-file` flags can be used on the same Terraform command to pass in multiple `.tfvars` files as necessary.
+
+Here’s a couple examples of using the `-var-file` flag to pass in `.tfvars` files to Terraform commands:
+
+```bash
+# Pass .tfvar files to 'plan' command
+terraform plan \
+-var-file 'production.tfvars' \
+-var-file 'secrets.tfvars'
+
+# Pass .tfvar files to 'apply ' command
+terraform apply \
+-var-file 'production.tfvars' \
+-var-file 'secrets.tfvars'
+```
+
+### terraform.tvfars
+
+This is the default file to load in terraform variables in blunk
+
+### auto.tfvars
+
+An alternative to using the `-var-file` flag is to use a file name with the `.auto.tfvars` extension. This will be loaded automatically, similar to the `terraform.tfvars` file.
+
+### Order of terraform variables
+
+With multiple methods of being able to pass Input Variable values to Terraform `plan` and `apply` commands there is a specific order in which variables values are assigned. This is important if the same Input Variable is specified multiple times so you can be sure the expected value is used to override other duplicate value definitions for the same Input Variable.
+
+When Terraform loads Input Variable values from the various definition methods, they are loaded in the following order with later sources taking precedence over earlier sources:
+
+1. Environment variables
+2. `terraform.tfvars` file, if present
+3. `terraform.tfvars.json` file, if present
+4. Any `.auto.tfvars` or `.auto.tfvars.json` files, processed in lexical order of their filenames.
+5. Any `-var` and `-var-file` flags on the command-line, in the order they are provided.
+
+[Source 1](https://build5nines.com/use-terraform-input-variables-to-parameterize-infrastructure-deployments/#:~:text=The%20%2Dvar%2Dfile%20flag%20is,in%20a%20file%20with%20a%20.)
+
+[Source 2](https://oracle-base.com/articles/misc/terraform-variables#auto.tfvars-files)

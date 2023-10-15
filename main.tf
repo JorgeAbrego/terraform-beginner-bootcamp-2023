@@ -27,24 +27,21 @@ provider "terratowns" {
   token = var.terratowns_access_token
 }
 
-module "home_arcanum_hosting" {
+module "home_lol_worlds" {
   source = "./modules/terrahouse_aws"
   user_uuid = var.teacherseat_user_uuid
-  public_path = var.arcanum.public_path
-  content_version = var.arcanum.content_version
+  public_path = var.lolw.public_path
+  content_version = var.lolw.content_version
 }
 
 resource "terratowns_home" "home" {
-  name = "How to play Arcanum in 2023!"
+  name = "LoL Worlds 2023 Begins"
   description = <<DESCRIPTION
-Arcanum is a game from 2001 that shipped with alot of bugs.
-Modders have removed all the originals making this game really fun
-to play (despite that old look graphics). This is my guide that will
-show you how to play arcanum without spoiling the plot.
+I'm excited about this tournament. All my support to Korean team T1.
 DESCRIPTION
-  domain_name = module.home_arcanum_hosting.domain_name
-  town = "missingo"
-  content_version = var.arcanum.content_version
+  domain_name = module.home_lol_worlds.domain_name
+  town = "gamers-grotto"
+  content_version = var.lolw.content_version
 }
 
 module "home_payday_hosting" {
